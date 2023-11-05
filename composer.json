@@ -2,6 +2,7 @@
     "name": "minigyima/warden",
     "description": "A robust and modular access control library for Laravel",
     "type": "library",
+    "version": "0.1.0",
     "require": {
         "illuminate/support": ">=9.0",
         "illuminate/cache": ">=9.0",
