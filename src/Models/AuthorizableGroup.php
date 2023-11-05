@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Minigyima\Warden\Facades\Warden;
 use Minigyima\Warden\Interfaces\Permission;
 use Minigyima\Warden\Util\HasForcedConnection;
 
@@ -69,6 +70,17 @@ class AuthorizableGroup extends Model
     }
 
     /**
+     * Invalidates all Authorizables associated with this group
+     *
+     * @return void
+     */
+    public function invalidateAllAuthorizables(): void
+    {
+        $ids = $this->authorizables()->pluck('id')->toArray();
+        Warden::invalidate($ids);
+    }
+
+    /**
      * Grants a permission or permissions to this group
      * @param Permission|array<int, Permission> $arg
      * @return void
@@ -82,6 +94,7 @@ class AuthorizableGroup extends Model
         }, is_array($arg) ? $arg : [$arg]));
         $this->permissions = $permissions;
         $this->save();
+        $this->invalidateAllAuthorizables();
     }
 
     /**
@@ -98,5 +111,6 @@ class AuthorizableGroup extends Model
         }, is_array($arg) ? $arg : [$arg]));
         $this->permissions = $permissions;
         $this->save();
+        $this->invalidateAllAuthorizables();
     }
 }
