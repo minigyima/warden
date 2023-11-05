@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Minigyima\Warden\Interfaces\Permission;
+use Minigyima\Warden\Util\HasForcedConnection;
 
 /**
  * The Group (or Role) model
@@ -15,6 +16,8 @@ use Minigyima\Warden\Interfaces\Permission;
  */
 class AuthorizableGroup extends Model
 {
+    use HasForcedConnection;
+
     /**
      * Hidden attributes, the pivot model hidden by default
      *
