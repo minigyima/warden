@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Minigyima\Warden\Models\AuthorizableGroup;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Minigyima\Warden\Errors\InvalidModeException;
+use Minigyima\Warden\Facades\Warden;
 use Minigyima\Warden\Models\AuthorizablePivot;
 
 /**
@@ -76,10 +77,12 @@ trait AuthorizableBehaviour
         if ((bool) config('warden.role_mode')) {
             $this->attachRole($arg);
             $this->refresh();
+            Warden::invalidate($this);
             return;
         }
         $this->groups()->syncWithoutDetaching($arg);
         $this->refresh();
+        Warden::invalidate($this);
     }
 
     /**
@@ -97,10 +100,12 @@ trait AuthorizableBehaviour
         if ((bool) config('warden.role_mode')) {
             $this->detachRoles();
             $this->refresh();
+            Warden::invalidate($this);
             return;
         }
         $this->groups()->detach($arg);
         $this->refresh();
+        Warden::invalidate($this);
     }
 
     /**
@@ -113,9 +118,11 @@ trait AuthorizableBehaviour
         if ((bool) config('warden.role_mode')) {
             $this->detachRoles();
             $this->refresh();
+            Warden::invalidate($this);
             return;
         }
         $this->groups()->detach();
         $this->refresh();
+        Warden::invalidate($this);
     }
 }

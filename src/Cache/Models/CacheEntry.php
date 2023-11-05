@@ -118,6 +118,18 @@ class CacheEntry
     }
 
     /**
+     * Resets the cached permissions to a default state
+     *
+     * @return null
+     */
+    private function resetCache(): null
+    {
+        $this->all_permissions = $this->gatherPermissions($this->authorizable);
+        $this->cached_permissions = [];
+        return null;
+    }
+
+    /**
      * Constructor, Bootstraps the Entry, checks for invalidation, and loads the permissions if necessary.
      *
      * @param Authorizable $authorizable
@@ -135,8 +147,7 @@ class CacheEntry
         $this->cold_cache = $cold_cache;
         $this->is_authorizable_super = $this->setSuper();
         if ($this->checkInvalidate()) {
-            $this->all_permissions = $this->gatherPermissions($this->authorizable);
-            $this->cached_permissions = [];
+            $this->resetCache();
         } else {
             $this->unserialize($serialized_data);
         }
@@ -161,6 +172,10 @@ class CacheEntry
      */
     private function tryCache(string $permissionString): bool|null
     {
+        if ($this->checkInvalidate()) {
+            return $this->resetCache();
+        }
+
         if (array_key_exists($permissionString, $this->cached_permissions)) {
             return $this->cached_permissions[$permissionString];
         }
