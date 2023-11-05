@@ -78,7 +78,7 @@ trait AuthorizableBehaviour
             $this->refresh();
             return;
         }
-        $this->groups()->attach($arg);
+        $this->groups()->syncWithoutDetaching($arg);
         $this->refresh();
     }
 
@@ -108,7 +108,7 @@ trait AuthorizableBehaviour
      *
      * @return void
      */
-    public function removeAll()
+    public function detachAllGroups()
     {
         if ((bool) config('warden.role_mode')) {
             $this->detachRoles();
