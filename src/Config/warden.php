@@ -28,6 +28,19 @@ return [
     'permission_namespace' => 'App\\Permissions',
 
     /*
+    |--------------------------------------------------------------------------
+    | Role mode
+    |--------------------------------------------------------------------------
+    |
+    | Instead of the user being assigned multiple groups, the user is assigned
+    | a single role. This is useful for applications that don't require complex
+    | permission structures.
+    |
+    */
+
+    'role_mode' => false,
+
+    /*
     |-----------------.---------------------------------------------------------
     | Cache folder
     |--------------------------------------------------------------------------

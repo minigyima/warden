@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
+use Minigyima\Warden\Interfaces\Permission;
 
 /**
- * The Group model
+ * The Group (or Role) model
  * @package Warden
  */
 class AuthorizableGroup extends Model
@@ -46,8 +48,52 @@ class AuthorizableGroup extends Model
      *
      * @return HasMany
      */
-    public function authorizables(): HasMany
+    public function authorizablePivots(): HasMany
     {
-        return $this->hasMany(Authorizable::class);
+        return $this->hasMany(AuthorizablePivot::class);
+    }
+
+    /**
+     * The relation which returns all the models which are assigned to this group
+     *
+     * @return Collection<int, Authorizable>
+     */
+    public function authorizables(): Collection
+    {
+        return $this->authorizablePivots()->get()->map(function ($pivot) {
+            return $pivot->model;
+        });
+    }
+
+    /**
+     * Grants a permission or permissions to this group
+     * @param Permission|array<int, Permission> $arg
+     * @return void
+     * @throws \Exception
+     */
+    public function grant(Permission|array $arg): void
+    {
+        $permissions = [...$this->permissions];
+        $permissions = array_merge($permissions, array_map(function ($p) {
+            return $p->permissionString();
+        }, is_array($arg) ? $arg : [$arg]));
+        $this->permissions = $permissions;
+        $this->save();
+    }
+
+    /**
+     * Revokes a permission or permissions from this group
+     * @param Permission|array<int, Permission> $arg
+     * @return void
+     * @throws \Exception
+     */
+    public function revoke(Permission|array $arg): void
+    {
+        $permissions = [...$this->permissions];
+        $permissions = array_diff($permissions, array_map(function ($p) {
+            return $p->permissionString();
+        }, is_array($arg) ? $arg : [$arg]));
+        $this->permissions = $permissions;
+        $this->save();
     }
 }

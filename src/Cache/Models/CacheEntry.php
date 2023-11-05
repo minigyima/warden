@@ -2,16 +2,19 @@
 
 namespace Minigyima\Warden\Cache\Models;
 
+use Minigyima\Warden\Cache\GathersPermissions;
 use Minigyima\Warden\Contracts\Authorizable;
 use Minigyima\Warden\Interfaces\ColdCacheDriver;
 use Minigyima\Warden\Interfaces\WarmCacheDriver;
 use Minigyima\Warden\Interfaces\Permission;
+
 /**
  * The entry associated with an Authorizable in the cache
  * @package Warden
  */
 class CacheEntry
 {
+    use GathersPermissions;
     /**
      * Does the Authorizable have SuperUser permissions
      *
@@ -31,14 +34,14 @@ class CacheEntry
      *
      * @var WarmCacheDriver
      */
-    private WarmCacheDriver $warm_cache;
+    private readonly WarmCacheDriver $warm_cache;
 
     /**
      * The currently loaded cold cache driver
      *
      * @var ColdCacheDriver
      */
-    private ColdCacheDriver $cold_cache;
+    private readonly ColdCacheDriver $cold_cache;
 
     /**
      * Every Permission of the associated Authorizable
@@ -64,7 +67,7 @@ class CacheEntry
     {
         $saved = json_decode($serialized_data, true) ?? [
             'cached_permissions' => [],
-            'all_permissions' => $this->setAllPermissions(),
+            'all_permissions' => $this->gatherPermissions($this->authorizable),
         ];
         $this->cached_permissions = $saved['cached_permissions'];
         $this->all_permissions = $saved['all_permissions'];
@@ -132,26 +135,11 @@ class CacheEntry
         $this->cold_cache = $cold_cache;
         $this->is_authorizable_super = $this->setSuper();
         if ($this->checkInvalidate()) {
-            $this->all_permissions = $this->setAllPermissions();
+            $this->all_permissions = $this->gatherPermissions($this->authorizable);
             $this->cached_permissions = [];
         } else {
             $this->unserialize($serialized_data);
         }
-    }
-
-    /**
-     * Loads all the permissions from the Database
-     *
-     * @return array
-     */
-    public function setAllPermissions(): array
-    {
-        $group_permissions = $this->authorizable
-            ->groups()
-            ->get()
-            ->pluck('permissions')
-            ->toArray();
-        return array_merge(...$group_permissions);
     }
 
     /**

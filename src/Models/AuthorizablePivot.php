@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Relations\MorphPivot;
  * The pivot model used for linking AuthorizableGroups to Authorizables
  * @package Warden
  */
-class Authorizable extends MorphPivot
+class AuthorizablePivot extends MorphPivot
 {
     public $incrementing = false;
     public $guarded = [];
     protected $table = 'authorizables';
+    public $with = ['model'];
 
     public function model()
     {

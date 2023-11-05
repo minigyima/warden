@@ -3,6 +3,7 @@
 namespace Minigyima\Warden\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Minigyima\Warden\Services\Warden as ServicesWarden;
 
 class Warden extends Facade
 {
@@ -11,6 +12,6 @@ class Warden extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return Warden::class;
+        return ServicesWarden::class;
     }
 }
