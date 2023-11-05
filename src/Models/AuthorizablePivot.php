@@ -17,9 +17,9 @@ class AuthorizablePivot extends MorphPivot
     public $incrementing = false;
     public $guarded = [];
     protected $table = 'authorizables';
-    public $with = ['model'];
+    public $with = ['authorizable'];
 
-    public function model()
+    public function authorizable()
     {
         return $this->morphTo('authorizable');
     }

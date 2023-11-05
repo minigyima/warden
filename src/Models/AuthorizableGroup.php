@@ -65,7 +65,7 @@ class AuthorizableGroup extends Model
     public function authorizables(): Collection
     {
         return $this->authorizablePivots()->get()->map(function ($pivot) {
-            return $pivot->model;
+            return $pivot->authorizable;
         });
     }
 
