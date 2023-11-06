@@ -21,10 +21,13 @@ return new class extends Migration
             $table->string('name');
             $table->longText('permissions');
         });
-        $group = new AuthorizableGroup();
-        $group->name = 'Default (user)';
-        $group->permissions = Warden::getAllScopedPermissions();
-        $group->save();
+
+        if (config('warden.create_default_group')) {
+            $group = new AuthorizableGroup();
+            $group->name = 'Default (user)';
+            $group->permissions = Warden::getAllScopedPermissions();
+            $group->save();
+        }
     }
 
     /**
