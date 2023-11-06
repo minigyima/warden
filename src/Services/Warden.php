@@ -229,6 +229,17 @@ class Warden extends AbstractSingleton
     }
 
     /**
+     * Resolves a given PermissionString to a Permission object
+     *
+     * @param string $permissionString
+     * @return Permission
+     */
+    public function resolve(string $permissionString): Permission
+    {
+        return $this->cold_cache->resolvePermissionFromString($permissionString);
+    }
+
+    /**
      * Throws an exception for a given Permission
      *
      * @param Permission $permission

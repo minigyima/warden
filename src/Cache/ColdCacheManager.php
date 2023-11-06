@@ -3,6 +3,7 @@
 namespace Minigyima\Warden\Cache;
 
 use Illuminate\Support\Facades\Log;
+use Minigyima\Warden\Errors\InvalidPermissionException;
 use Minigyima\Warden\Errors\PermissionNotResolvedException;
 use Minigyima\Warden\Interfaces\ColdCacheDriver;
 use Minigyima\Warden\Interfaces\Permission;
@@ -178,7 +179,7 @@ class ColdCacheManager implements ColdCacheDriver
      * Resolves a given Permission's PermissionString
      *
      * @param Permission $permission
-     * @return string
+     * @return permission-string
      */
     public function resolvePermission(Permission $permission): string
     {
@@ -188,5 +189,25 @@ class ColdCacheManager implements ColdCacheDriver
         throw new PermissionNotResolvedException(
             'Permission ' . $permission::class . ' could not be resolved from the Cache. Please rebuild'
         );
+    }
+
+    /**
+     * Resolves a Permission from a permissionString
+     *
+     * @param permission-string $permissionString
+     * @return Permission
+     */
+    public function resolvePermissionFromString(string $permissionString): Permission
+    {
+
+        if (!array_key_exists($permissionString, $this->permission_resolutions)) {
+            throw new InvalidPermissionException("Invalid Permission $permissionString");
+        }
+
+        $permission = new ($this->permission_resolutions[$permissionString]);
+        if ($permission instanceof Permission) {
+            return $permission;
+        }
+        throw new InvalidPermissionException("Invalid Permission $permissionString");
     }
 }

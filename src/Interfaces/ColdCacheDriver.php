@@ -63,4 +63,12 @@ interface ColdCacheDriver
      * @return string
      */
     public function resolvePermission(Permission $permission): string;
+
+    /**
+     * Resolves a given PermissionString to a Permission object
+     *
+     * @param permission-string $permissionString
+     * @return Permission
+     */
+    public function resolvePermissionFromString(string $permissionString): Permission;
 }
