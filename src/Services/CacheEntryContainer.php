@@ -3,7 +3,7 @@
 namespace Minigyima\Warden\Services;
 
 use Minigyima\Warden\Cache\Models\CacheEntry;
-use App\Helpers\Shared\Interfaces\AbstractSingleton;
+use Minigyima\Warden\Contracts\AbstractSingleton;
 
 /**
  * A Singleton class used as a container for the current resolved CacheEntry
