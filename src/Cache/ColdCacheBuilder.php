@@ -5,8 +5,8 @@ namespace Minigyima\Warden\Cache;
 use Minigyima\Warden\Interfaces\Permission;
 use Minigyima\Warden\Interfaces\ColdCacheWriter;
 use Exception;
-use Spatie\LaravelIgnition\Support\Composer\ComposerClassMap;
 use Illuminate\Support\Str;
+use Minigyima\Warden\Util\Composer\ComposerClassMap;
 
 /**
  * The default 'Cold' cache builder implementation for Warden
