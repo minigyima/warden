@@ -21,7 +21,10 @@ class AuthorizablePivot extends MorphPivot
 
     public function authorizable()
     {
-        return $this->morphTo('authorizable');
+        $morph = $this->morphTo('authorizable');
+        $morph->getParent()->setKeyType('string');
+
+        return $morph;
     }
 
     public function group(): BelongsTo
