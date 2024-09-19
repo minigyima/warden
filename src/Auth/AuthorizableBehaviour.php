@@ -27,7 +27,11 @@ trait AuthorizableBehaviour
         if ((bool) config('warden.role_mode')) {
             throw new InvalidModeException();
         }
-        return $this->morphToMany(AuthorizableGroup::class, 'authorizable');
+
+        $morph = $this->morphToMany(AuthorizableGroup::class, 'authorizable');
+        $morph->getParent()->setKeyType('string');
+
+        return $morph;
     }
 
     /**
