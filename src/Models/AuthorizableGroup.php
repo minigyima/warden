@@ -36,6 +36,13 @@ class AuthorizableGroup extends Model
     ];
 
     /**
+     * Fillable attributes
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'permissions'];
+
+    /**
      * The name of the table
      *
      * @var string
